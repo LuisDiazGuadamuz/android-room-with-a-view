@@ -18,7 +18,6 @@ package com.example.android.roomwordssample;
 
 import android.app.Application;
 import androidx.lifecycle.LiveData;
-import android.os.AsyncTask;
 
 import java.util.List;
 
@@ -52,21 +51,20 @@ class WordRepository {
     // Like this, Room ensures that you're not doing any long running operations on the main
     // thread, blocking the UI.
     void insert(Word word) {
-        new insertAsyncTask(mWordDao).execute(word);
+        WordRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWordDao.insert(word);
+        });
     }
 
-    private static class insertAsyncTask extends AsyncTask<Word, Void, Void> {
+    void deleteAll() {
+        WordRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWordDao.deleteAll();
+        });
+    }
 
-        private WordDao mAsyncTaskDao;
-
-        insertAsyncTask(WordDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final Word... params) {
-            mAsyncTaskDao.insert(params[0]);
-            return null;
-        }
+    void deleteWord(Word word) {
+        WordRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mWordDao.deleteWord(word);
+        });
     }
 }

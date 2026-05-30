@@ -66,6 +66,12 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
     public int getItemCount() {
         return mWords.size();
     }
+
+    /**
+     * Get the word at a given position.
+     * This method is useful for implementing swipe-to-delete.
+     */
+    public Word getWordAtPosition(int position) {
+        return mWords.get(position);
+    }
 }
-
-
